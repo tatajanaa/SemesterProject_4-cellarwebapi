@@ -12,6 +12,6 @@ import java.util.List;
 public interface IdatabaseAdapter<T> {
 
     public List<T> getReadings(Date startDate, Date endDate) throws ParseException, SQLException;
-    public Temperature getLastReading() throws SQLException;
+    public T getLastReading() throws SQLException;
 
 }

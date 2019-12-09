@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class TempController {
-    IdatabaseAdapter adapter;
+
 
     public TempController() {
 
@@ -23,7 +23,7 @@ public class TempController {
     }
 
     public List<Temperature> getTempertaures(Date startDate, Date endDate)  {
-        adapter = new TemperatureRepo(DataWarehouseConnection.getConnection());
+        IdatabaseAdapter adapter = new TemperatureRepo(DataWarehouseConnection.getConnection());
 
        try {
             return adapter.getReadings(startDate, endDate);
@@ -35,9 +35,9 @@ public class TempController {
 
 
     public Temperature getLastTemperatureReading(){
-        adapter = new TemperatureRepo(SourceDbConnection.getConnection());
+        IdatabaseAdapter adapter1 = new TemperatureRepo(SourceDbConnection.getConnection());
         try {
-            return adapter.getLastReading();
+            return (Temperature) adapter1.getLastReading();
         } catch (SQLException e) {
             e.printStackTrace();
         }

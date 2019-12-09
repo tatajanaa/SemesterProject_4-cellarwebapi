@@ -1,28 +1,28 @@
 package database;
 
+import model.Co2;
 import model.Temperature;
 
 import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
-
-
 import java.util.List;
 
-public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
+public class CO2Repo implements IdatabaseAdapter<Co2>{
 
-    List<Temperature> temperatureList =null;
+
+    List<Co2> co2List =null;
     private Connection connection;
     Statement statement = null;
 
-    public TemperatureRepo(Connection connection) {
-        this.connection = connection;
+    public CO2Repo(Connection connection) {
+        this.connection=connection;
     }
 
 
     @Override
-    public List<Temperature> getReadings(Date startDate, Date endDate) throws ParseException, SQLException {
-        temperatureList = new ArrayList<>();
+    public List<Co2> getReadings(Date startDate, Date endDate) throws ParseException, SQLException {
+        co2List = new ArrayList<>();
         statement = connection.createStatement();
 
         ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
@@ -30,29 +30,29 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
                 " Dim_Date.MeasuringDate," +
                 " Dim_Time.MeasuringTime," +
                 " mesurement" +
-                " FROM Fact_Temperature" +
-                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_Temperature.Date_ID" +
-                " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_Temperature.Time_ID" +
+                " FROM Fact_CO2" +
+                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_CO2.Date_ID" +
+                " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_CO2.Time_ID" +
                 " Where MeasuringDate<='" + endDate + "' and MeasuringDate>='"
                 + startDate + "'" +
                 " order by MeasuringDate, MeasuringTime; ");
 
         while (resultSet.next()) {
-            Temperature temp = new Temperature();
-            temp.setDate(resultSet.getDate("MeasuringDate"));
-            temp.setTime(resultSet.getTime("MeasuringTime"));
-            temp.setReading(resultSet.getDouble("mesurement"));
-            temperatureList.add(temp);
+            Co2 co2 = new Co2();
+            co2.setDate(resultSet.getDate("MeasuringDate"));
+            co2.setTime(resultSet.getTime("MeasuringTime"));
+            co2.setReading(resultSet.getDouble("mesurement"));
+            co2List.add(co2);
 
         }
-        return temperatureList;
+        return co2List;
 
     }
 
     @Override
-    public Temperature getLastReading() throws SQLException {
+    public Co2 getLastReading() throws SQLException {
         statement = connection.createStatement();
-        Temperature temp = new Temperature();
+        Co2 co2 = new Co2();
         ResultSet resultSet = statement.executeQuery("use sourceDB_SEP4A19G2 " +
                 "DECLARE @date date"+
                 " DECLARE @time time(0)"+
@@ -60,7 +60,7 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
                 " DECLARE MYTESTCURSOR CURSOR"+
                 " DYNAMIC"      +
                 " FOR"+
-                " SELECT date_time, date_time, value  FROM sourceTable where sensorType ='Temperature'"+
+                " SELECT date_time, date_time, value  FROM sourceTable where sensorType ='CO2'"+
                 " OPEN MYTESTCURSOR"+
                 " FETCH LAST FROM MYTESTCURSOR INTO @date, @time, @value "+
                 " CLOSE MYTESTCURSOR"+
@@ -68,22 +68,13 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
                 " SELECT @date, @time, @value ");
 
         while (resultSet.next()) {
-            temp.setDate(resultSet.getDate(1));
-            temp.setTime(resultSet.getTime(2));
-            temp.setReading(resultSet.getDouble(3));
+            co2.setDate(resultSet.getDate(1));
+            co2.setTime(resultSet.getTime(2));
+            co2.setReading(resultSet.getDouble(3));
         }
-        System.out.println(temp);
-        return temp;
+        System.out.println(co2);
+        return co2;
     }
 
 
-
-
-
-
-
-
 }
-
-
-

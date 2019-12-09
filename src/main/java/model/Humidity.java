@@ -46,4 +46,13 @@ public class Humidity {
     public void setReading(double reading) {
         this.reading = reading;
     }
+
+    @Override
+    public String toString() {
+        return "Humidity{" +
+                "date=" + date +
+                ", time=" + time +
+                ", reading=" + reading +
+                '}';
+    }
 }

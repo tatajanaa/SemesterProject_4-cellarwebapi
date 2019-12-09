@@ -46,4 +46,13 @@ public class Co2 {
     public void setReading(double reading) {
         this.reading = reading;
     }
+
+    @Override
+    public String toString() {
+        return "Co2{" +
+                "date=" + date +
+                ", time=" + time +
+                ", reading=" + reading +
+                '}';
+    }
 }

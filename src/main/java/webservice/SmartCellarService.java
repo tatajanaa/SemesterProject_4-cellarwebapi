@@ -1,35 +1,33 @@
 package webservice;
 
-import com.google.gson.Gson;
+import controllers.CO2Controller;
 import controllers.HumidityController;
 import controllers.TempController;
-import model.Co2;
-import model.Humidity;
-import model.Pir;
-import model.Temperature;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.sql.Connection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-import java.util.Date;
-import java.util.List;
 
 @Path("/api")
 @Produces("application/json")
 public class SmartCellarService implements ISmartCellarService {
 
     private final SimpleDateFormat SDF;
+    TempController tempController;
+    HumidityController humidityController;
+    CO2Controller co2Controller;
 
 
     public SmartCellarService() {
+
         this.SDF = new SimpleDateFormat("dd-MM-yyyy");
+        tempController = new TempController();
+      humidityController = new HumidityController();
+       co2Controller = new CO2Controller();
     }
 
 
@@ -42,11 +40,13 @@ public class SmartCellarService implements ISmartCellarService {
 
         switch (sensortype.toLowerCase()) {
             case "temperature":
-                return Response.status(Response.Status.OK).entity(controller.getLastTemperatureReading()).build();
+                return Response.status(Response.Status.OK).entity(tempController.getLastTemperatureReading()).build();
 
             case "co2":
-                // code block
-                break;
+                return Response.status(Response.Status.OK).entity(co2Controller.getLastCo2Reading()).build();
+
+            case "humidity":
+                return Response.status(Response.Status.OK).entity(humidityController.getLastHumidityReading()).build();
             default:
                 // code block
         }
@@ -67,16 +67,16 @@ public class SmartCellarService implements ISmartCellarService {
 
         TempController controller = new TempController();
         HumidityController humidityController = new HumidityController();
+        CO2Controller co2Controller = new CO2Controller();
 
         switch(sensortype.toLowerCase()) {
             case "temperature":
-                return Response.status(Response.Status.OK).entity(controller.getTempertaures(startDate1, endDate1)).build();
+                return Response.status(Response.Status.OK).entity(tempController.getTempertaures(startDate1, endDate1)).build();
 
             case "co2":
-                return Response.status(Response.Status.OK).entity(humidityController.getHumidity(startDate1, endDate1)).build();
+                return Response.status(Response.Status.OK).entity(co2Controller.getCo2List(startDate1, endDate1)).build();
             case "humidity":
-                // code block
-                break;
+                return Response.status(Response.Status.OK).entity(humidityController.getHumidity(startDate1, endDate1)).build();
             default:
                 // code block
         }

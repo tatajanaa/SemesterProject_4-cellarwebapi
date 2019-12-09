@@ -47,7 +47,29 @@ public class HumidityRepo implements IdatabaseAdapter<Humidity> {
     }
 
     @Override
-    public Temperature getLastReading() throws SQLException {
-        return null;
+    public Humidity getLastReading() throws SQLException {
+        statement = connection.createStatement();
+        Humidity humidity = new Humidity();
+        ResultSet resultSet = statement.executeQuery("use sourceDB_SEP4A19G2 " +
+                "DECLARE @date date"+
+                " DECLARE @time time(0)"+
+                " DECLARE @value  decimal(18,2)"+
+                " DECLARE MYTESTCURSOR CURSOR"+
+                " DYNAMIC"      +
+                " FOR"+
+                " SELECT date_time, date_time, value  FROM sourceTable where sensorType ='Humidity'"+
+                " OPEN MYTESTCURSOR"+
+                " FETCH LAST FROM MYTESTCURSOR INTO @date, @time, @value "+
+                " CLOSE MYTESTCURSOR"+
+                " DEALLOCATE MYTESTCURSOR"+
+                " SELECT @date, @time, @value ");
+
+        while (resultSet.next()) {
+            humidity.setDate(resultSet.getDate(1));
+            humidity.setTime(resultSet.getTime(2));
+            humidity.setReading(resultSet.getDouble(3));
+        }
+        System.out.println(humidity);
+        return humidity;
     }
 }
