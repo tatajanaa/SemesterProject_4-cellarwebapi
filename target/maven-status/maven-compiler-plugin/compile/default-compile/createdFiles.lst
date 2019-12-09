@@ -1,0 +1,8 @@
+database\SourceDbConnection.class
+model\Temperature.class
+model\TemperatureList.class
+database\Temperature.class
+database\TestConnection.class
+webApi\HelloService.class
+database\DataWarehouseConnection.class
+database\IdatabaseAdapter.class
