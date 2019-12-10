@@ -1,20 +1,19 @@
-package database;
+package data_access.JDBC_connection;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class DataWarehouseConnection {
-
+public class SourceDbConnection {
     private static Connection connection;
 
 
-    public static final String DB_NAME = "SmartCellarWarehouse_SEP4A19G2";
+    public static final String DB_NAME = "sourceDB_SEP4A19G2";
     private static String dbAddress = "10.200.131.2";
     private static String dbUsername = "SEP4A19G2";
     private static String dbPassword = "SEP4A19G2";
-    private static String connectionUrl = "jdbc:sqlserver://10.200.131.2;database=TestDB_SEP4A19G2;user=SEP4A19G2;password=SEP4A19G2;";
+
     private static String mysqlUrl = "jdbc:sqlserver://" + dbAddress + ";database="+ DB_NAME + ";user="+dbUsername+ ";password="+ dbPassword;
-    // + "?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&autoReconnect=true";
+
 
     /**
      * Lazy implementation of the database connection

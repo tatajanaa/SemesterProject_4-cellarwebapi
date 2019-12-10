@@ -1,28 +1,25 @@
-package database;
+package data_access;
 
-import model.Temperature;
+import model.Humidity;
 
 import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
-
-
 import java.util.List;
 
-public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
+public class HumidityRepo implements IdatabaseAdapter<Humidity> {
 
-    List<Temperature> temperatureList =null;
+    List<Humidity> humidityList =null;
     private Connection connection;
     Statement statement = null;
 
-    public TemperatureRepo(Connection connection) {
+    public HumidityRepo(Connection connection) {
         this.connection = connection;
     }
 
-
     @Override
-    public List<Temperature> getReadings(Date startDate, Date endDate) throws ParseException, SQLException {
-        temperatureList = new ArrayList<>();
+    public List<Humidity> getReadings(Date startDate, Date endDate) throws ParseException, SQLException {
+        humidityList = new ArrayList<>();
         statement = connection.createStatement();
 
         ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
@@ -30,29 +27,28 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
                 " Dim_Date.MeasuringDate," +
                 " Dim_Time.MeasuringTime," +
                 " mesurement" +
-                " FROM Fact_Temperature" +
-                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_Temperature.Date_ID" +
-                " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_Temperature.Time_ID" +
+                " FROM Fact_Humidity" +
+                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_Humidity.Date_ID" +
+                " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_Humidity.Time_ID" +
                 " Where MeasuringDate<='" + endDate + "' and MeasuringDate>='"
                 + startDate + "'" +
                 " order by MeasuringDate, MeasuringTime; ");
 
         while (resultSet.next()) {
-            Temperature temp = new Temperature();
-            temp.setDate(resultSet.getDate("MeasuringDate"));
-            temp.setTime(resultSet.getTime("MeasuringTime"));
-            temp.setReading(resultSet.getDouble("mesurement"));
-            temperatureList.add(temp);
+            Humidity humidity = new Humidity();
+            humidity.setDate(resultSet.getDate("MeasuringDate"));
+            humidity.setTime(resultSet.getTime("MeasuringTime"));
+            humidity.setReading(resultSet.getDouble("mesurement"));
+            humidityList.add(humidity);
 
         }
-        return temperatureList;
-
+        return humidityList;
     }
 
     @Override
-    public Temperature getLastReading() throws SQLException {
+    public Humidity getLastReading() throws SQLException {
         statement = connection.createStatement();
-        Temperature temp = new Temperature();
+        Humidity humidity = new Humidity();
         ResultSet resultSet = statement.executeQuery("use sourceDB_SEP4A19G2 " +
                 "DECLARE @date date"+
                 " DECLARE @time time(0)"+
@@ -60,7 +56,7 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
                 " DECLARE MYTESTCURSOR CURSOR"+
                 " DYNAMIC"      +
                 " FOR"+
-                " SELECT date_time, date_time, value  FROM sourceTable where sensorType ='Temperature'"+
+                " SELECT date_time, date_time, value  FROM sourceTable where sensorType ='Humidity'"+
                 " OPEN MYTESTCURSOR"+
                 " FETCH LAST FROM MYTESTCURSOR INTO @date, @time, @value "+
                 " CLOSE MYTESTCURSOR"+
@@ -68,22 +64,11 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
                 " SELECT @date, @time, @value ");
 
         while (resultSet.next()) {
-            temp.setDate(resultSet.getDate(1));
-            temp.setTime(resultSet.getTime(2));
-            temp.setReading(resultSet.getDouble(3));
+            humidity.setDate(resultSet.getDate(1));
+            humidity.setTime(resultSet.getTime(2));
+            humidity.setReading(resultSet.getDouble(3));
         }
-        System.out.println(temp);
-        return temp;
+        System.out.println(humidity);
+        return humidity;
     }
-
-
-
-
-
-
-
-
 }
-
-
-

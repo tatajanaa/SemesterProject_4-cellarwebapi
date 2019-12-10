@@ -1,9 +1,9 @@
 package controllers;
 
-import database.*;
+import data_access.*;
+import data_access.JDBC_connection.DataWarehouseConnection;
+import data_access.JDBC_connection.SourceDbConnection;
 import model.Co2;
-import model.Humidity;
-import model.Temperature;
 
 import java.sql.Date;
 import java.sql.SQLException;

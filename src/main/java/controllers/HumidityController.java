@@ -1,14 +1,13 @@
 package controllers;
 
-import database.*;
+import data_access.*;
+import data_access.JDBC_connection.DataWarehouseConnection;
+import data_access.JDBC_connection.SourceDbConnection;
 import model.Humidity;
-import model.Temperature;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class HumidityController {

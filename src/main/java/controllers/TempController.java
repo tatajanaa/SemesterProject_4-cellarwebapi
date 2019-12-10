@@ -1,16 +1,14 @@
 package controllers;
 
-import database.DataWarehouseConnection;
-import database.IdatabaseAdapter;
-import database.SourceDbConnection;
-import database.TemperatureRepo;
+import data_access.JDBC_connection.DataWarehouseConnection;
+import data_access.IdatabaseAdapter;
+import data_access.JDBC_connection.SourceDbConnection;
+import data_access.TemperatureRepo;
 import model.Temperature;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import java.util.List;
 

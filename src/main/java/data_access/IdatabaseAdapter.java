@@ -1,6 +1,4 @@
-package database;
-
-import model.Temperature;
+package data_access;
 
 import java.sql.Date;
 import java.sql.SQLException;

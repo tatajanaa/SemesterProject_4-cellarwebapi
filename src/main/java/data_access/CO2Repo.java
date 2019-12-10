@@ -1,7 +1,6 @@
-package database;
+package data_access;
 
 import model.Co2;
-import model.Temperature;
 
 import java.sql.*;
 import java.text.ParseException;
