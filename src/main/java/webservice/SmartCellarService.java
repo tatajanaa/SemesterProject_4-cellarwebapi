@@ -3,12 +3,15 @@ package webservice;
 import controllers.CO2Controller;
 import controllers.HumidityController;
 import controllers.TempController;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -37,27 +40,29 @@ public class SmartCellarService implements ISmartCellarService {
     @Path("/last/{sensortype}")
      public Response getLastReading(@PathParam("sensortype") String sensortype) {
         TempController controller = new TempController();
+        JSONObject json = new JSONObject();
+        try {
+            json.put("sensortype ", sensortype + " not found");
+            switch (sensortype.toLowerCase()) {
+                case "temperature":
+                    return Response.status(Response.Status.OK).entity(tempController.getLastTemperatureReading()).build();
 
-        switch (sensortype.toLowerCase()) {
-            case "temperature":
-                return Response.status(Response.Status.OK).entity(tempController.getLastTemperatureReading()).build();
+                case "co2":
+                    return Response.status(Response.Status.OK).entity(co2Controller.getLastCo2Reading()).build();
 
-            case "co2":
-                return Response.status(Response.Status.OK).entity(co2Controller.getLastCo2Reading()).build();
+                case "humidity":
+                    return Response.status(Response.Status.OK).entity(humidityController.getLastHumidityReading()).build();
+            }
 
-            case "humidity":
-                return Response.status(Response.Status.OK).entity(humidityController.getLastHumidityReading()).build();
-            default:
-                // code block
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return null;
-
-
+        return Response.status(Response.Status.NOT_FOUND).entity(json.toString()).build();
     }
 
     @Override
     @GET
-    @Path("/sensorData/{sensortype}/{startDate}/{endDate}")
+    @Path("/sensordata/{sensortype}/{startDate}/{endDate}")
     public Response getSensorData(@PathParam("sensortype") String sensortype,
                                   @PathParam("startDate") String startDate,
                                   @PathParam("endDate")  String endDate) throws ParseException {
@@ -69,18 +74,15 @@ public class SmartCellarService implements ISmartCellarService {
         HumidityController humidityController = new HumidityController();
         CO2Controller co2Controller = new CO2Controller();
 
-        switch(sensortype.toLowerCase()) {
-            case "temperature":
-                return Response.status(Response.Status.OK).entity(tempController.getTempertaures(startDate1, endDate1)).build();
+            switch (sensortype.toLowerCase()) {
+                case "temperature":
+                    return Response.status(Response.Status.OK).entity(tempController.getTempertaures(startDate1, endDate1)).build();
 
-            case "co2":
-                return Response.status(Response.Status.OK).entity(co2Controller.getCo2List(startDate1, endDate1)).build();
-            case "humidity":
-                return Response.status(Response.Status.OK).entity(humidityController.getHumidity(startDate1, endDate1)).build();
-            default:
-                // code block
-        }
-
+                case "co2":
+                    return Response.status(Response.Status.OK).entity(co2Controller.getCo2List(startDate1, endDate1)).build();
+                case "humidity":
+                    return Response.status(Response.Status.OK).entity(humidityController.getHumidity(startDate1, endDate1)).build();
+            }
 
         return null;
     }
