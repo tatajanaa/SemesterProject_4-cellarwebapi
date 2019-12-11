@@ -52,10 +52,10 @@ public class Temperature {
 
     @Override
     public String toString() {
-        return "TemperatureModel{" +
-                "date=" + date +
-                ", time=" + time +
-                ", reading=" + reading +
-                '}';
+        return
+                "{date =   " + date +
+                " time =   " + time +
+                " reading= " + reading + "}\n"
+                ;
     }
 }

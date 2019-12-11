@@ -7,6 +7,7 @@ import data_access.JDBC_connection.SourceDbConnection;
 
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class TestConnection {
 
@@ -14,15 +15,19 @@ public class TestConnection {
 
 
 
-  SourceDbConnection.getConnection();
-    TempController c = new TempController();
- c.getLastTemperatureReading();
 
-        CO2Controller c1 = new CO2Controller();
+    TempController c = new TempController();
+        SimpleDateFormat SDF= new SimpleDateFormat("dd-MM-yyyy");
+        java.sql.Date startDate1 = new java.sql.Date(SDF.parse("01-12-2019").getTime());
+        java.sql.Date endDate1 = new java.sql.Date(SDF.parse("01-12-2019").getTime());
+
+        System.out.println(c.getTempertaures(startDate1, endDate1));
+
+/*        CO2Controller c1 = new CO2Controller();
         c1.getLastCo2Reading();
 
         HumidityController hc = new HumidityController();
-        hc.getLastHumidityReading();
+        hc.getLastHumidityReading();*/
 
 
 

@@ -71,7 +71,7 @@ public class CO2Repo implements IdatabaseAdapter<Co2>{
             co2.setTime(resultSet.getTime(2));
             co2.setReading(resultSet.getDouble(3));
         }
-        System.out.println(co2);
+
         return co2;
     }
 
