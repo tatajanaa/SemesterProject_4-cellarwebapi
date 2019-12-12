@@ -11,7 +11,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -70,11 +69,7 @@ public class SmartCellarService implements ISmartCellarService {
         java.sql.Date startDate1 = new java.sql.Date(SDF.parse(startDate).getTime());
         java.sql.Date endDate1 = new java.sql.Date(SDF.parse(endDate).getTime());
 
-        TempController controller = new TempController();
-        HumidityController humidityController = new HumidityController();
-        CO2Controller co2Controller = new CO2Controller();
-
-            switch (sensortype.toLowerCase()) {
+              switch (sensortype.toLowerCase()) {
                 case "temperature":
                     return Response.status(Response.Status.OK).entity(tempController.getTempertaures(startDate1, endDate1)).build();
 
@@ -85,6 +80,20 @@ public class SmartCellarService implements ISmartCellarService {
             }
 
         return null;
+    }
+
+    @GET
+      @Path("/hello")
+    public Response sayHelloInPlainText() {
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("String", "Hello World!");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String hello ="Hello world!";
+        return Response.status(Response.Status.OK).entity(json.toString()).build();
     }
 
 
