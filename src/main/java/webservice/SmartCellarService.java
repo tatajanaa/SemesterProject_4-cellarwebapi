@@ -40,8 +40,10 @@ public class SmartCellarService implements ISmartCellarService {
      public Response getLastReading(@PathParam("sensortype") String sensortype) {
         TempController controller = new TempController();
         JSONObject json = new JSONObject();
+
         try {
             json.put("sensortype ", sensortype + " not found");
+
             switch (sensortype.toLowerCase()) {
                 case "temperature":
                     return Response.status(Response.Status.OK).entity(tempController.getLastTemperatureReading()).build();
@@ -66,10 +68,12 @@ public class SmartCellarService implements ISmartCellarService {
                                   @PathParam("startDate") String startDate,
                                   @PathParam("endDate")  String endDate) throws ParseException {
 
+
+
         java.sql.Date startDate1 = new java.sql.Date(SDF.parse(startDate).getTime());
         java.sql.Date endDate1 = new java.sql.Date(SDF.parse(endDate).getTime());
 
-              switch (sensortype.toLowerCase()) {
+            switch (sensortype.toLowerCase()) {
                 case "temperature":
                     return Response.status(Response.Status.OK).entity(tempController.getTempertaures(startDate1, endDate1)).build();
 
@@ -78,6 +82,8 @@ public class SmartCellarService implements ISmartCellarService {
                 case "humidity":
                     return Response.status(Response.Status.OK).entity(humidityController.getHumidity(startDate1, endDate1)).build();
             }
+
+
 
         return null;
     }

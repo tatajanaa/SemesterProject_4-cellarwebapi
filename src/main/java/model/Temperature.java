@@ -53,9 +53,6 @@ public class Temperature {
     @Override
     public String toString() {
         return
-                "{date =   " + date +
-                " time =   " + time +
-                " reading= " + reading + "}\n"
-                ;
+                 date + " " + time +" "+  reading;
     }
 }

@@ -53,25 +53,15 @@ public class CO2Repo implements IdatabaseAdapter<Co2>{
         statement = connection.createStatement();
         Co2 co2 = new Co2();
         ResultSet resultSet = statement.executeQuery("use sourceDB_SEP4A19G2 " +
-                "DECLARE @date date"+
-                " DECLARE @time time(0)"+
-                " DECLARE @value  decimal(18,2)"+
-                " DECLARE MYTESTCURSOR CURSOR"+
-                " DYNAMIC"      +
-                " FOR"+
-                " SELECT date_time, date_time, value  FROM sourceTable where sensorType ='CO2'"+
-                " OPEN MYTESTCURSOR"+
-                " FETCH LAST FROM MYTESTCURSOR INTO @date, @time, @value "+
-                " CLOSE MYTESTCURSOR"+
-                " DEALLOCATE MYTESTCURSOR"+
-                " SELECT @date, @time, @value ");
+                " SELECT top (1) date_time, " +
+                " value  FROM sourceTable where sensorType ='CO2' order by date_time desc;");
 
         while (resultSet.next()) {
             co2.setDate(resultSet.getDate(1));
-            co2.setTime(resultSet.getTime(2));
-            co2.setReading(resultSet.getDouble(3));
+            co2.setTime(resultSet.getTime(1));
+            co2.setReading(resultSet.getDouble(2));
         }
-
+        System.out.println(co2);
         return co2;
     }
 

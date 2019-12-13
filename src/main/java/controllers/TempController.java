@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +21,13 @@ public class TempController {
 
     public TempController() {
 
-
     }
 
-    public List<Temperature> getTempertaures(Date startDate, Date endDate) {
+    public List<Temperature> getTempertaures(Date startDate, Date endDate) throws ParseException {
         IdatabaseAdapter adapter = new TemperatureRepo(DataWarehouseConnection.getConnection());
         List<Temperature> targetList = null;
         List<Temperature> sourceList =null;
+
 
         try {
             sourceList= new ArrayList<Temperature>(adapter.getReadings(startDate, endDate));

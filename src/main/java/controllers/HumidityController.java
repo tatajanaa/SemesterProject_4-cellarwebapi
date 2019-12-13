@@ -44,11 +44,11 @@ public class HumidityController {
         return targetList;
     }
 
-    public Co2 getLastHumidityReading(){
+    public Humidity getLastHumidityReading(){
         IdatabaseAdapter adapter1 = new HumidityRepo(SourceDbConnection.getConnection());
 
         try {
-            return (Co2) adapter1.getLastReading();
+            return (Humidity) adapter1.getLastReading();
         } catch (SQLException e) {
             e.printStackTrace();
         }

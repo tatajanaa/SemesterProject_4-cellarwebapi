@@ -14,6 +14,7 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
     List<Temperature> temperatureList =null;
     private Connection connection;
     Statement statement = null;
+    PreparedStatement stmt =null;
 
     public TemperatureRepo(Connection connection) {
         this.connection = connection;
@@ -54,26 +55,48 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
         statement = connection.createStatement();
         Temperature temp = new Temperature();
         ResultSet resultSet = statement.executeQuery("use sourceDB_SEP4A19G2 " +
-                "DECLARE @date date"+
-                " DECLARE @time time(0)"+
-                " DECLARE @value  decimal(18,2)"+
-                " DECLARE MYTESTCURSOR CURSOR"+
-                " DYNAMIC"      +
-                " FOR"+
-                " SELECT date_time, date_time, value  FROM sourceTable where sensorType ='Temperature'"+
-                " OPEN MYTESTCURSOR"+
-                " FETCH LAST FROM MYTESTCURSOR INTO @date, @time, @value "+
-                " CLOSE MYTESTCURSOR"+
-                " DEALLOCATE MYTESTCURSOR"+
-                " SELECT @date, @time, @value ");
+                " SELECT top (1) date_time, " +
+                " value  FROM sourceTable where sensorType ='Temperature' order by date_time desc;");
 
         while (resultSet.next()) {
             temp.setDate(resultSet.getDate(1));
-            temp.setTime(resultSet.getTime(2));
-            temp.setReading(resultSet.getDouble(3));
+            temp.setTime(resultSet.getTime(1));
+            temp.setReading(resultSet.getDouble(2));
         }
         System.out.println(temp);
         return temp;
+    }
+
+    public void add(float temp, float humid, int co2) {
+
+        try {
+            stmt = connection.prepareStatement(
+                    "INSERT INTO \"sourceDB_SEP4A19G2\".dbo.sourceTable(date_time, sensorType, sensorId, sensorLocation, value) "
+                            + "VALUES (current_timestamp ,'Temperature', 'T_1', 'cell1'," + temp + ");");
+            stmt.executeUpdate();
+            System.out.println("OK");
+
+            stmt = connection.prepareStatement(
+                    "INSERT INTO \"sourceDB_SEP4A19G2\".dbo.sourceTable(date_time, sensorType, sensorId, sensorLocation, value) "
+                            + "VALUES (current_timestamp ,'Humidity', 'H_1', 'cell1'," + humid + ");");
+            stmt.executeUpdate();
+
+            stmt = connection.prepareStatement(
+                    "INSERT INTO \"sourceDB_SEP4A19G2\".dbo.sourceTable(date_time, sensorType, sensorId, sensorLocation, value) "
+                            + "VALUES (current_timestamp ,'CO2', 'C_1', 'cell1'," + co2 + ");");
+
+
+            stmt.executeUpdate();
+
+            connection.close();
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+        }
+    }
+
     }
 
 
@@ -83,7 +106,7 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
 
 
 
-}
+
 
 
 
