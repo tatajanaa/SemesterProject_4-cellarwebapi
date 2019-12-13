@@ -3,13 +3,11 @@ package webservice;
 import controllers.CO2Controller;
 import controllers.HumidityController;
 import controllers.TempController;
+import controllers.ThresholdController;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +20,7 @@ public class SmartCellarService implements ISmartCellarService {
     TempController tempController;
     HumidityController humidityController;
     CO2Controller co2Controller;
+    ThresholdController thresholdController;
 
 
     public SmartCellarService() {
@@ -30,6 +29,7 @@ public class SmartCellarService implements ISmartCellarService {
         tempController = new TempController();
       humidityController = new HumidityController();
        co2Controller = new CO2Controller();
+       thresholdController = new ThresholdController();
     }
 
 
@@ -59,6 +59,34 @@ public class SmartCellarService implements ISmartCellarService {
             e.printStackTrace();
         }
         return Response.status(Response.Status.NOT_FOUND).entity(json.toString()).build();
+    }
+
+    @Override
+    @GET
+    @Path("/threshold/co2/{minValue}/{maxValue}")
+    public Response setCO2Thresholds(@PathParam("minValue") double minValue,
+                                     @PathParam("maxValue") double maxValue) {
+
+        thresholdController.setCO2Thresholds(minValue, maxValue);
+        return Response.status(200).build();
+    }
+
+    @Override
+    @GET
+    @Path("/threshold/temp/{minValue}/{maxValue}")
+    public Response setTemperatureThresholds (@PathParam("minValue") double minValue,
+                                              @PathParam("maxValue") double maxValue) {
+        thresholdController.setTemperatureThresholds(minValue, maxValue);
+        return Response.status(200).build();
+    }
+
+    @Override
+    @GET
+    @Path("/threshold/humid/{minValue}/{maxValue}")
+    public Response setHumidityThresholds (@PathParam("minValue") double minValue,
+                                           @PathParam("maxValue") double maxValue) {
+        thresholdController.setHumidityThresholds(minValue, maxValue);
+        return Response.status(200).build();
     }
 
     @Override

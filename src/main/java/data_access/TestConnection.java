@@ -14,7 +14,8 @@ public class TestConnection {
     public static void main(String[] args) throws ParseException, SQLException {
 
 
-        System.out.println("Hello");
+        ThresholdsRepo t = new ThresholdsRepo(SourceDbConnection.getConnection());
+        t.setCO2Thresholds(500, 1000);
 
 
 
