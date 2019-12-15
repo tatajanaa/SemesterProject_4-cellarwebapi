@@ -49,6 +49,11 @@ public class CO2Repo implements IdatabaseAdapter<Co2>{
     }
 
     @Override
+    public List<Co2> getAverage(Date startDate, Date endDate) throws SQLException {
+        return null;
+    }
+
+    @Override
     public Co2 getLastReading() throws SQLException {
         statement = connection.createStatement();
         Co2 co2 = new Co2();

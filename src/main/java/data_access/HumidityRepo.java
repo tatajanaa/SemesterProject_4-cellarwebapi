@@ -46,6 +46,11 @@ public class HumidityRepo implements IdatabaseAdapter<Humidity> {
     }
 
     @Override
+    public List<Humidity> getAverage(Date startDate, Date endDate) throws SQLException {
+        return null;
+    }
+
+    @Override
     public Humidity getLastReading() throws SQLException {
         statement = connection.createStatement();
         Humidity humidity = new Humidity();

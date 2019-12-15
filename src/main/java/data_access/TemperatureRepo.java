@@ -51,6 +51,34 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
     }
 
     @Override
+    public List<Temperature> getAverage(Date startDate, Date endDate) throws SQLException {
+        temperatureList = new ArrayList<>();
+        statement = connection.createStatement();
+
+        ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
+                "SELECT" +
+                " distinct Dim_Date.MeasuringDate," +
+                " avg(mesurement) as Average" +
+                " FROM Fact_Temperature" +
+                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_Temperature.Date_ID" +
+                 " Where MeasuringDate<='" + endDate + "' and MeasuringDate>='"
+                + startDate + "'" +
+                " group by MeasuringDate order by MeasuringDate; ");
+
+
+        while (resultSet.next()) {
+            Temperature temp = new Temperature();
+            temp.setDate(resultSet.getDate("MeasuringDate"));
+            temp.setReading(resultSet.getDouble("Average"));
+            temperatureList.add(temp);
+
+
+        }
+        System.out.println(temperatureList);
+        return temperatureList;
+    }
+
+    @Override
     public Temperature getLastReading() throws SQLException {
         statement = connection.createStatement();
         Temperature temp = new Temperature();

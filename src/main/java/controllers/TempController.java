@@ -49,6 +49,17 @@ public class TempController {
         }
          return targetList ;
     }
+    public List<Temperature> getAverageTemperature(Date startDate, Date endDate) throws ParseException {
+        IdatabaseAdapter adapter = new TemperatureRepo(DataWarehouseConnection.getConnection());
+
+        try {
+            return adapter.getAverage(startDate, endDate);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
+
 
 
     public Temperature getLastTemperatureReading(){

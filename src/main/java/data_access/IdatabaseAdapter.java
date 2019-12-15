@@ -10,6 +10,7 @@ import java.util.List;
 public interface IdatabaseAdapter<T> {
 
     public List<T> getReadings(Date startDate, Date endDate) throws ParseException, SQLException;
+    public List<T> getAverage(Date startDate, Date endDate) throws SQLException;
     public T getLastReading() throws SQLException;
 
 }
