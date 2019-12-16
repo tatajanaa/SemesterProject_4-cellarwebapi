@@ -74,7 +74,7 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
 
 
         }
-        System.out.println(temperatureList);
+
         return temperatureList;
     }
 
@@ -91,13 +91,14 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
             temp.setTime(resultSet.getTime(1));
             temp.setReading(resultSet.getDouble(2));
         }
-        System.out.println(temp);
+
         return temp;
     }
 
     public void add(float temp, float humid, int co2) {
 
         try {
+            
             stmt = connection.prepareStatement(
                     "INSERT INTO \"sourceDB_SEP4A19G2\".dbo.sourceTable(date_time, sensorType, sensorId, sensorLocation, value) "
                             + "VALUES (current_timestamp ,'Temperature', 'T_1', 'cell1'," + temp + ");");

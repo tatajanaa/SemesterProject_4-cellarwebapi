@@ -1,6 +1,7 @@
 package data_access;
 
 import model.Humidity;
+import model.Temperature;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -47,7 +48,30 @@ public class HumidityRepo implements IdatabaseAdapter<Humidity> {
 
     @Override
     public List<Humidity> getAverage(Date startDate, Date endDate) throws SQLException {
-        return null;
+        humidityList = new ArrayList<>();
+        statement = connection.createStatement();
+
+        ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
+                "SELECT" +
+                " distinct Dim_Date.MeasuringDate," +
+                " avg(mesurement) as Average" +
+                " FROM Fact_Humidity" +
+                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_Humidity.Date_ID" +
+                " Where MeasuringDate<='" + endDate + "' and MeasuringDate>='"
+                + startDate + "'" +
+                " group by MeasuringDate order by MeasuringDate; ");
+
+
+        while (resultSet.next()) {
+            Humidity humidity = new Humidity();
+            humidity.setDate(resultSet.getDate("MeasuringDate"));
+            humidity.setReading(resultSet.getDouble("Average"));
+            humidityList.add(humidity);
+
+
+        }
+        System.out.println(humidityList);
+        return humidityList;
     }
 
     @Override
@@ -63,7 +87,6 @@ public class HumidityRepo implements IdatabaseAdapter<Humidity> {
             humidity.setTime(resultSet.getTime(1));
             humidity.setReading(resultSet.getDouble(2));
         }
-        System.out.println(humidity);
-        return humidity;
+              return humidity;
     }
 }

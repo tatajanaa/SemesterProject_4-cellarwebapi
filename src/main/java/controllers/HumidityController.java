@@ -55,4 +55,15 @@ public class HumidityController {
 
         return null;
     }
+
+    public List<Humidity> getAverageHumidity(Date startDate, Date endDate) throws ParseException {
+        IdatabaseAdapter adapter = new HumidityRepo(DataWarehouseConnection.getConnection());
+
+        try {
+            return adapter.getAverage(startDate, endDate);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
 }

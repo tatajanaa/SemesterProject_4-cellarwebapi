@@ -51,4 +51,14 @@ public class CO2Controller {
 
         return null;
     }
+    public List<Co2> getAverageCO2(Date startDate, Date endDate) throws ParseException {
+        IdatabaseAdapter adapter = new CO2Repo(DataWarehouseConnection.getConnection());
+
+        try {
+            return adapter.getAverage(startDate, endDate);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
 }

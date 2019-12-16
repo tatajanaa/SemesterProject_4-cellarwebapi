@@ -1,6 +1,7 @@
 package data_access;
 
 import model.Co2;
+import model.Humidity;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -50,7 +51,30 @@ public class CO2Repo implements IdatabaseAdapter<Co2>{
 
     @Override
     public List<Co2> getAverage(Date startDate, Date endDate) throws SQLException {
-        return null;
+        co2List = new ArrayList<>();
+        statement = connection.createStatement();
+
+        ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
+                "SELECT" +
+                " distinct Dim_Date.MeasuringDate," +
+                " avg(mesurement) as Average" +
+                " FROM Fact_CO2" +
+                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_CO2.Date_ID" +
+                " Where MeasuringDate<='" + endDate + "' and MeasuringDate>='"
+                + startDate + "'" +
+                " group by MeasuringDate order by MeasuringDate; ");
+
+
+        while (resultSet.next()) {
+            Co2 co2 = new Co2();
+            co2.setDate(resultSet.getDate("MeasuringDate"));
+            co2.setReading(resultSet.getDouble("Average"));
+            co2List.add(co2);
+
+
+        }
+
+        return co2List;
     }
 
     @Override
@@ -66,7 +90,7 @@ public class CO2Repo implements IdatabaseAdapter<Co2>{
             co2.setTime(resultSet.getTime(1));
             co2.setReading(resultSet.getDouble(2));
         }
-        System.out.println(co2);
+
         return co2;
     }
 

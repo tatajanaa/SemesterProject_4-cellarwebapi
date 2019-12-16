@@ -121,25 +121,31 @@ public class SmartCellarService implements ISmartCellarService {
     @Path("/average/{sensortype}/{startDate}/{endDate}")
     public Response getAverage(@PathParam("sensortype") String sensortype,
                                   @PathParam("startDate") String startDate,
-                                  @PathParam("endDate")  String endDate) throws ParseException {
+                                  @PathParam("endDate")  String endDate) {
 
-        java.sql.Date startDate1 = new java.sql.Date(SDF.parse(startDate).getTime());
-        java.sql.Date endDate1 = new java.sql.Date(SDF.parse(endDate).getTime());
+        java.sql.Date startDate1 = null;
+        try {
+            startDate1 = new java.sql.Date(SDF.parse(startDate).getTime());
+            java.sql.Date endDate1 = new java.sql.Date(SDF.parse(endDate).getTime());
 
-        switch (sensortype.toLowerCase()) {
-            case "temperature":
-                return Response.status(Response.Status.OK).entity(tempController.getAverageTemperature(startDate1, endDate1)).build();
 
-            case "co2":
-                return null;
-            case "humidity":
-                return null;
+            switch (sensortype.toLowerCase()) {
+                case "temperature":
+                    return Response.status(Response.Status.OK).entity(tempController.getAverageTemperature(startDate1, endDate1)).build();
+
+                case "co2":
+                    return Response.status(Response.Status.OK).entity(co2Controller.getAverageCO2(startDate1, endDate1)).build();
+                case "humidity":
+                    return Response.status(Response.Status.OK).entity(humidityController.getAverageHumidity(startDate1, endDate1)).build();
+            }
+
         }
+        catch (ParseException e) {
+            e.printStackTrace();
 
-
-
+            return Response.status(500).entity(e).build();
+        }
         return null;
-
     }
 
     @GET
