@@ -18,33 +18,7 @@ public class HumidityRepo implements IdatabaseAdapter<Humidity> {
         this.connection = connection;
     }
 
-    @Override
-    public List<Humidity> getReadings(Date startDate, Date endDate) throws ParseException, SQLException {
-        humidityList = new ArrayList<>();
-        statement = connection.createStatement();
 
-        ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
-                "SELECT" +
-                " Dim_Date.MeasuringDate," +
-                " Dim_Time.MeasuringTime," +
-                " mesurement" +
-                " FROM Fact_Humidity" +
-                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_Humidity.Date_ID" +
-                " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_Humidity.Time_ID" +
-                " Where MeasuringDate<='" + endDate + "' and MeasuringDate>='"
-                + startDate + "'" +
-                " order by MeasuringDate, MeasuringTime; ");
-
-        while (resultSet.next()) {
-            Humidity humidity = new Humidity();
-            humidity.setDate(resultSet.getDate("MeasuringDate"));
-            humidity.setTime(resultSet.getTime("MeasuringTime"));
-            humidity.setReading(resultSet.getDouble("mesurement"));
-            humidityList.add(humidity);
-
-        }
-        return humidityList;
-    }
 
     @Override
     public List<Humidity> getAverage(Date startDate, Date endDate) throws SQLException {
@@ -89,4 +63,35 @@ public class HumidityRepo implements IdatabaseAdapter<Humidity> {
         }
               return humidity;
     }
+
+    @Override
+    public List<Humidity> getAveragePerEachHour(Date date) throws SQLException {
+        humidityList = new ArrayList<>();
+        statement = connection.createStatement();
+
+        ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
+                "SELECT" +
+                " distinct Dim_Time.Hour as Hour," +
+                " avg(mesurement) as Average" +
+                " FROM Fact_Humidity" +
+                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_Humidity.Date_ID" +
+                " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_Humidity.Time_ID" +
+                " Where MeasuringDate<='" + date + "' " +
+                " group by Hour, mesurement order by  Hour, Average; ");
+
+
+
+        while (resultSet.next()) {
+            Humidity humidity = new Humidity();
+            humidity.setHour(resultSet.getInt("Hour"));
+            humidity.setReading(resultSet.getDouble("Average"));
+            humidityList.add(humidity);
+
+
+        }
+
+        return humidityList;
+    }
+
+
 }

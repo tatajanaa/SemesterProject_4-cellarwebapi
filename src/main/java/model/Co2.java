@@ -11,6 +11,7 @@ public class Co2 {
     private Date date;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss")
     private Time time;
+    private int hour;
     private double reading;
 
     public Co2() {
@@ -21,6 +22,14 @@ public class Co2 {
         this.date = date;
         this.time = time;
         this.reading = reading;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
     }
 
     public Date getDate() {

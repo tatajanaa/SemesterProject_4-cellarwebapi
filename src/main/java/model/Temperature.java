@@ -14,10 +14,19 @@ public class Temperature {
     private Date date;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss")
     private Time time;
+    private int hour;
     private double reading;
 
     public Temperature() {
 
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public int getHour() {
+        return hour;
     }
 
     public Temperature(Date date, Time time, double reading) {

@@ -20,34 +20,7 @@ public class CO2Repo implements IdatabaseAdapter<Co2>{
     }
 
 
-    @Override
-    public List<Co2> getReadings(Date startDate, Date endDate) throws ParseException, SQLException {
-        co2List = new ArrayList<>();
-        statement = connection.createStatement();
 
-        ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
-                "SELECT" +
-                " Dim_Date.MeasuringDate," +
-                " Dim_Time.MeasuringTime," +
-                " mesurement" +
-                " FROM Fact_CO2" +
-                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_CO2.Date_ID" +
-                " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_CO2.Time_ID" +
-                " Where MeasuringDate<='" + endDate + "' and MeasuringDate>='"
-                + startDate + "'" +
-                " order by MeasuringDate, MeasuringTime; ");
-
-        while (resultSet.next()) {
-            Co2 co2 = new Co2();
-            co2.setDate(resultSet.getDate("MeasuringDate"));
-            co2.setTime(resultSet.getTime("MeasuringTime"));
-            co2.setReading(resultSet.getDouble("mesurement"));
-            co2List.add(co2);
-
-        }
-        return co2List;
-
-    }
 
     @Override
     public List<Co2> getAverage(Date startDate, Date endDate) throws SQLException {
@@ -92,6 +65,35 @@ public class CO2Repo implements IdatabaseAdapter<Co2>{
         }
 
         return co2;
+    }
+
+    @Override
+    public List<Co2> getAveragePerEachHour(Date date) throws SQLException {
+        co2List = new ArrayList<>();
+        statement = connection.createStatement();
+
+        ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
+                "SELECT" +
+                " distinct Dim_Time.Hour as Hour," +
+                " avg(mesurement) as Average" +
+                " FROM Fact_CO2" +
+                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_CO2.Date_ID" +
+                " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_CO2.Time_ID" +
+                " Where MeasuringDate<='" + date + "' " +
+                " group by Hour, mesurement order by  Hour, Average; ");
+
+
+
+        while (resultSet.next()) {
+            Co2 co2 = new Co2();
+            co2.setHour(resultSet.getInt("Hour"));
+            co2.setReading(resultSet.getDouble("Average"));
+            co2List.add(co2);
+
+
+        }
+
+        return co2List;
     }
 
 

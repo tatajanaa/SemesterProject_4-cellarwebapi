@@ -11,7 +11,9 @@ public class Humidity {
     private Date date;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss")
     private Time time;
+    private int hour;
     private double reading;
+
 
     public Humidity() {
 
@@ -21,6 +23,14 @@ public class Humidity {
         this.date = date;
         this.time = time;
         this.reading = reading;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
     }
 
     public Date getDate() {
@@ -53,6 +63,7 @@ public class Humidity {
                 "date=" + date +
                 ", time=" + time +
                 ", reading=" + reading +
+                ", hour=" + hour +
                 '}';
     }
 }

@@ -89,32 +89,6 @@ public class SmartCellarService implements ISmartCellarService {
         return Response.status(200).build();
     }
 
-    @Override
-    @GET
-    @Path("/sensordata/{sensortype}/{startDate}/{endDate}")
-    public Response getSensorData(@PathParam("sensortype") String sensortype,
-                                  @PathParam("startDate") String startDate,
-                                  @PathParam("endDate")  String endDate) throws ParseException {
-
-
-
-        java.sql.Date startDate1 = new java.sql.Date(SDF.parse(startDate).getTime());
-        java.sql.Date endDate1 = new java.sql.Date(SDF.parse(endDate).getTime());
-
-            switch (sensortype.toLowerCase()) {
-                case "temperature":
-                    return Response.status(Response.Status.OK).entity(tempController.getTempertaures(startDate1, endDate1)).build();
-
-                case "co2":
-                    return Response.status(Response.Status.OK).entity(co2Controller.getCo2List(startDate1, endDate1)).build();
-                case "humidity":
-                    return Response.status(Response.Status.OK).entity(humidityController.getHumidity(startDate1, endDate1)).build();
-            }
-
-
-
-        return null;
-    }
 
     @Override
     @GET
@@ -148,19 +122,39 @@ public class SmartCellarService implements ISmartCellarService {
         return null;
     }
 
+    @Override
     @GET
-      @Path("/hello")
-    public Response sayHelloInPlainText() {
+    @Path("/avgHour/{sensortype}/{date}")
+    public Response getAveragePerEachHour(@PathParam("sensortype") String sensortype,
+                                          @PathParam("date") String date){
 
-        JSONObject json = new JSONObject();
+        java.sql.Date date1 = null;
         try {
-            json.put("String", "Hello World!");
-        } catch (JSONException e) {
-            e.printStackTrace();
+            date1 = new java.sql.Date(SDF.parse(date).getTime());
+
+            switch (sensortype.toLowerCase()) {
+                case "temperature":
+                    return Response.status(Response.Status.OK).entity(tempController.getAverageTemperaturePerHour(date1)).build();
+
+                case "co2":
+                    return Response.status(Response.Status.OK).entity(co2Controller.getAverageCo2PerHour(date1)).build();
+                case "humidity":
+                    return Response.status(Response.Status.OK).entity(humidityController.getAverageHumidityPerHour(date1)).build();
+            }
+
         }
-        String hello ="Hello world!";
-        return Response.status(Response.Status.OK).entity(json.toString()).build();
+        catch (ParseException e) {
+            e.printStackTrace();
+
+            return Response.status(500).entity(e).build();
+        }
+        return null;
+
+
     }
+
+
+
 
 
 }

@@ -1,5 +1,6 @@
 package data_access;
 
+import model.Co2;
 import model.Temperature;
 
 import java.sql.*;
@@ -21,34 +22,6 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
     }
 
 
-    @Override
-    public List<Temperature> getReadings(Date startDate, Date endDate) throws ParseException, SQLException {
-        temperatureList = new ArrayList<>();
-        statement = connection.createStatement();
-
-        ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
-                "SELECT" +
-                " Dim_Date.MeasuringDate," +
-                " Dim_Time.MeasuringTime," +
-                " mesurement" +
-                " FROM Fact_Temperature" +
-                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_Temperature.Date_ID" +
-                " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_Temperature.Time_ID" +
-                " Where MeasuringDate<='" + endDate + "' and MeasuringDate>='"
-                + startDate + "'" +
-                " order by MeasuringDate, MeasuringTime; ");
-
-        while (resultSet.next()) {
-            Temperature temp = new Temperature();
-            temp.setDate(resultSet.getDate("MeasuringDate"));
-            temp.setTime(resultSet.getTime("MeasuringTime"));
-            temp.setReading(resultSet.getDouble("mesurement"));
-            temperatureList.add(temp);
-
-        }
-        return temperatureList;
-
-    }
 
     @Override
     public List<Temperature> getAverage(Date startDate, Date endDate) throws SQLException {
@@ -95,36 +68,39 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature>{
         return temp;
     }
 
-    public void add(float temp, float humid, int co2) {
+    @Override
+    public List<Temperature> getAveragePerEachHour(Date date) throws SQLException {
+        temperatureList = new ArrayList<>();
+        statement = connection.createStatement();
 
-        try {
-            
-            stmt = connection.prepareStatement(
-                    "INSERT INTO \"sourceDB_SEP4A19G2\".dbo.sourceTable(date_time, sensorType, sensorId, sensorLocation, value) "
-                            + "VALUES (current_timestamp ,'Temperature', 'T_1', 'cell1'," + temp + ");");
-            stmt.executeUpdate();
-            System.out.println("OK");
-
-            stmt = connection.prepareStatement(
-                    "INSERT INTO \"sourceDB_SEP4A19G2\".dbo.sourceTable(date_time, sensorType, sensorId, sensorLocation, value) "
-                            + "VALUES (current_timestamp ,'Humidity', 'H_1', 'cell1'," + humid + ");");
-            stmt.executeUpdate();
-
-            stmt = connection.prepareStatement(
-                    "INSERT INTO \"sourceDB_SEP4A19G2\".dbo.sourceTable(date_time, sensorType, sensorId, sensorLocation, value) "
-                            + "VALUES (current_timestamp ,'CO2', 'C_1', 'cell1'," + co2 + ");");
+        ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
+                "SELECT" +
+                " distinct Dim_Time.Hour as Hour," +
+                " avg(mesurement) as Average" +
+                " FROM Fact_Temperature" +
+                " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_Temperature.Date_ID" +
+                " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_Temperature.Time_ID" +
+                " Where MeasuringDate<='" + date + "' " +
+                " group by Hour, mesurement order by  Hour, Average; ");
 
 
-            stmt.executeUpdate();
 
-            connection.close();
+        while (resultSet.next()) {
+            Temperature temperature = new Temperature();
+            temperature.setHour(resultSet.getInt("Hour"));
+            temperature.setReading(resultSet.getDouble("Average"));
+            temperatureList.add(temperature);
 
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
 
         }
+
+        return temperatureList;
     }
+
+
+
+
+
 
     }
 

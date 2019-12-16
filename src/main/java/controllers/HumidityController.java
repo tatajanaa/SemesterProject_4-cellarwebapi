@@ -20,29 +20,7 @@ public class HumidityController {
 
     }
 
-    public List<Humidity> getHumidity(Date startDate, Date endDate) {
-        adapter = new HumidityRepo(DataWarehouseConnection.getConnection());
-        List<Humidity> targetList = null;
-        List<Humidity> sourceList = null;
-        try {
-            sourceList = new ArrayList<Humidity>(adapter.getReadings(startDate, endDate));
-            targetList = new ArrayList<>();
 
-            targetList.add(sourceList.get(0));
-
-            for (int i = 1; i < sourceList.size(); i++) {
-                if (sourceList.get(i).getReading() != sourceList.get(i - 1).getReading()) {
-                    targetList.add(sourceList.get(i));
-                }
-            }
-
-
-        } catch (ParseException | SQLException e) {
-            e.printStackTrace();
-
-        }
-        return targetList;
-    }
 
     public Humidity getLastHumidityReading(){
         IdatabaseAdapter adapter1 = new HumidityRepo(SourceDbConnection.getConnection());
@@ -61,6 +39,17 @@ public class HumidityController {
 
         try {
             return adapter.getAverage(startDate, endDate);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
+
+    public List<Humidity> getAverageHumidityPerHour(Date date) throws ParseException {
+        IdatabaseAdapter adapter = new HumidityRepo(DataWarehouseConnection.getConnection());
+
+        try {
+            return adapter.getAveragePerEachHour(date);
         } catch (SQLException e) {
             e.printStackTrace();
         }

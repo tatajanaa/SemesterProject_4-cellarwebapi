@@ -17,29 +17,6 @@ public class CO2Controller {
     public CO2Controller() {
     }
 
-    public List<Co2> getCo2List(Date startDate, Date endDate)  {
-        IdatabaseAdapter adapter = new CO2Repo(DataWarehouseConnection.getConnection());
-        List<Co2> targetList = null;
-        List<Co2> sourceList = null;
-        try {
-            sourceList = new ArrayList<Co2>(adapter.getReadings(startDate, endDate));
-            targetList = new ArrayList<>();
-
-            targetList.add(sourceList.get(0));
-
-            for (int i = 1; i < sourceList.size(); i++) {
-                if (sourceList.get(i).getReading() != sourceList.get(i - 1).getReading()) {
-                    targetList.add(sourceList.get(i));
-                }
-            }
-
-        } catch (ParseException | SQLException e) {
-            e.printStackTrace();
-
-        }
-        return targetList;
-    }
-
 
     public Co2 getLastCo2Reading(){
         IdatabaseAdapter adapter1 = new CO2Repo(SourceDbConnection.getConnection());
@@ -56,6 +33,17 @@ public class CO2Controller {
 
         try {
             return adapter.getAverage(startDate, endDate);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
+
+    public List<Co2> getAverageCo2PerHour(Date date) throws ParseException {
+        IdatabaseAdapter adapter = new CO2Repo(DataWarehouseConnection.getConnection());
+
+        try {
+            return adapter.getAveragePerEachHour(date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
