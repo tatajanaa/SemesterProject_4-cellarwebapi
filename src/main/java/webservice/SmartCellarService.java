@@ -140,7 +140,7 @@ public class SmartCellarService implements ISmartCellarService {
 
     @Override
     @GET
-    @Path("/avgHour/{sensortype}/{date}")
+    @Path("/avghour/{sensortype}/{date}")
     public Response getAveragePerEachHour(@PathParam("sensortype") String sensortype,
                                           @PathParam("date") String date) {
 
