@@ -91,4 +91,29 @@ public class ThresholdsRepo {
         System.out.println(thresholdList);
         return thresholdList;
     }
+
+    public List<Threshold> getOutOfBoundsLastReading() {
+
+        thresholdList = new ArrayList<>();
+        try {
+            statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery("use sourceDB_SEP4A19G2 " +
+                    " select* from sourceDB_SEP4A19G2.dbo.outOfBounds where " +
+                    "  sensorLocation='cell1';");
+
+            while (resultSet.next()) {
+                Threshold threshold = new Threshold();
+                threshold.setSensorType(resultSet.getString("SensorType"));
+                threshold.setMinValue(resultSet.getDouble("value"));
+                thresholdList.add(threshold);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(thresholdList);
+        return thresholdList;
+    }
+
 }

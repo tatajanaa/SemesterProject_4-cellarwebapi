@@ -18,5 +18,7 @@ public interface IdatabaseAdapter<T> {
 
     public List<T> getMinAndMaxPerDay(Date startDate, Date endDate);
 
+    //public T getLastReadingOutOfBounds();
+
 
 }

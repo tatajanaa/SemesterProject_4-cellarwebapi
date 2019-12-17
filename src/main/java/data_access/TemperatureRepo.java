@@ -2,6 +2,7 @@ package data_access;
 
 import model.Co2;
 import model.Temperature;
+import model.Threshold;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -143,6 +144,9 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature> {
         return temperatureList;
 
     }
+
+
+
 
 
 }

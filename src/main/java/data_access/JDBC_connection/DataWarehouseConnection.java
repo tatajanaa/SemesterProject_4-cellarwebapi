@@ -12,8 +12,8 @@ public class DataWarehouseConnection {
     private static String dbAddress = "10.200.131.2";
     private static String dbUsername = "SEP4A19G2";
     private static String dbPassword = "SEP4A19G2";
-    private static String connectionUrl = "jdbc:sqlserver://10.200.131.2;database=TestDB_SEP4A19G2;user=SEP4A19G2;password=SEP4A19G2;";
-    private static String mysqlUrl = "jdbc:sqlserver://" + dbAddress + ";database="+ DB_NAME + ";user="+dbUsername+ ";password="+ dbPassword;
+
+    private static String connectionUrl = "jdbc:sqlserver://" + dbAddress + ";database="+ DB_NAME + ";user="+dbUsername+ ";password="+ dbPassword;
     // + "?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&autoReconnect=true";
 
     /**
@@ -35,7 +35,7 @@ public class DataWarehouseConnection {
     private static Connection getNewConnection() {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            connection = DriverManager.getConnection(mysqlUrl);
+            connection = DriverManager.getConnection(connectionUrl);
         } catch (Exception e) {
             e.printStackTrace();
         }

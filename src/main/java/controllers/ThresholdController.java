@@ -36,5 +36,11 @@ public class ThresholdController {
         return repo.getThresholds();
 
     }
+    public List<Threshold> getOutOfBoundsLastReading() {
+        return repo.getOutOfBoundsLastReading();
+
+    }
+
+
 
 }

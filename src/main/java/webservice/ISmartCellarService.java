@@ -16,5 +16,7 @@ public interface ISmartCellarService {
 
     public Response getThresholds();
 
+    public Response getOutOfBoundsLastReading();
+
 
 }

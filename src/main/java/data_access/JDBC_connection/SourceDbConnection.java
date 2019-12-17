@@ -12,7 +12,7 @@ public class SourceDbConnection {
     private static String dbUsername = "SEP4A19G2";
     private static String dbPassword = "SEP4A19G2";
 
-    private static String mysqlUrl = "jdbc:sqlserver://" + dbAddress + ";database="+ DB_NAME + ";user="+dbUsername+ ";password="+ dbPassword;
+    private static String connectionUrl = "jdbc:sqlserver://" + dbAddress + ";database=" + DB_NAME + ";user=" + dbUsername + ";password=" + dbPassword;
 
 
     /**
@@ -34,7 +34,7 @@ public class SourceDbConnection {
     private static Connection getNewConnection() {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            connection = DriverManager.getConnection(mysqlUrl);
+            connection = DriverManager.getConnection(connectionUrl);
         } catch (Exception e) {
             e.printStackTrace();
         }
