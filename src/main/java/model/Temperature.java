@@ -7,7 +7,6 @@ import java.sql.Date;
 import java.sql.Time;
 
 
-
 public class Temperature {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
@@ -21,18 +20,18 @@ public class Temperature {
 
     }
 
+    public Temperature(Date date, Time time, double reading) {
+        this.date = date;
+        this.time = time;
+        this.reading = reading;
+    }
+
     public void setHour(int hour) {
         this.hour = hour;
     }
 
     public int getHour() {
         return hour;
-    }
-
-    public Temperature(Date date, Time time, double reading) {
-        this.date = date;
-        this.time = time;
-        this.reading = reading;
     }
 
     public Date getDate() {
@@ -62,6 +61,6 @@ public class Temperature {
     @Override
     public String toString() {
         return
-                 date + " " + time +" "+  reading;
+                date + " " + time + " " + reading;
     }
 }

@@ -7,7 +7,10 @@ import controllers.ThresholdController;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,17 +30,16 @@ public class SmartCellarService implements ISmartCellarService {
 
         this.SDF = new SimpleDateFormat("dd-MM-yyyy");
         tempController = new TempController();
-      humidityController = new HumidityController();
-       co2Controller = new CO2Controller();
-       thresholdController = new ThresholdController();
+        humidityController = new HumidityController();
+        co2Controller = new CO2Controller();
+        thresholdController = new ThresholdController();
     }
-
 
 
     @Override
     @GET
     @Path("/last/{sensortype}")
-     public Response getLastReading(@PathParam("sensortype") String sensortype) {
+    public Response getLastReading(@PathParam("sensortype") String sensortype) {
         TempController controller = new TempController();
         JSONObject json = new JSONObject();
 
@@ -74,8 +76,8 @@ public class SmartCellarService implements ISmartCellarService {
     @Override
     @GET
     @Path("/threshold/temp/{minValue}/{maxValue}")
-    public Response setTemperatureThresholds (@PathParam("minValue") double minValue,
-                                              @PathParam("maxValue") double maxValue) {
+    public Response setTemperatureThresholds(@PathParam("minValue") double minValue,
+                                             @PathParam("maxValue") double maxValue) {
         thresholdController.setTemperatureThresholds(minValue, maxValue);
         return Response.status(200).build();
     }
@@ -83,10 +85,17 @@ public class SmartCellarService implements ISmartCellarService {
     @Override
     @GET
     @Path("/threshold/humid/{minValue}/{maxValue}")
-    public Response setHumidityThresholds (@PathParam("minValue") double minValue,
-                                           @PathParam("maxValue") double maxValue) {
+    public Response setHumidityThresholds(@PathParam("minValue") double minValue,
+                                          @PathParam("maxValue") double maxValue) {
         thresholdController.setHumidityThresholds(minValue, maxValue);
         return Response.status(200).build();
+    }
+
+    @Override
+    @GET
+    @Path("/getThresholds")
+    public Response getThresholds() {
+        return Response.status(Response.Status.OK).entity(thresholdController.getThresholds()).build();
     }
 
 
@@ -94,8 +103,8 @@ public class SmartCellarService implements ISmartCellarService {
     @GET
     @Path("/average/{sensortype}/{startDate}/{endDate}")
     public Response getAverage(@PathParam("sensortype") String sensortype,
-                                  @PathParam("startDate") String startDate,
-                                  @PathParam("endDate")  String endDate) {
+                               @PathParam("startDate") String startDate,
+                               @PathParam("endDate") String endDate) {
 
         java.sql.Date startDate1 = null;
         try {
@@ -113,8 +122,7 @@ public class SmartCellarService implements ISmartCellarService {
                     return Response.status(Response.Status.OK).entity(humidityController.getAverageHumidity(startDate1, endDate1)).build();
             }
 
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
 
             return Response.status(500).entity(e).build();
@@ -126,7 +134,7 @@ public class SmartCellarService implements ISmartCellarService {
     @GET
     @Path("/avgHour/{sensortype}/{date}")
     public Response getAveragePerEachHour(@PathParam("sensortype") String sensortype,
-                                          @PathParam("date") String date){
+                                          @PathParam("date") String date) {
 
         java.sql.Date date1 = null;
         try {
@@ -142,8 +150,7 @@ public class SmartCellarService implements ISmartCellarService {
                     return Response.status(Response.Status.OK).entity(humidityController.getAverageHumidityPerHour(date1)).build();
             }
 
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
 
             return Response.status(500).entity(e).build();
@@ -153,6 +160,36 @@ public class SmartCellarService implements ISmartCellarService {
 
     }
 
+
+    @GET
+    @Path("/minMax/{sensortype}/{startDate}/{endDate}")
+    public Response getMinAndMaxPerDay(@PathParam("sensortype") String sensortype,
+                               @PathParam("startDate") String startDate,
+                               @PathParam("endDate") String endDate) {
+
+        java.sql.Date startDate1 = null;
+        try {
+            startDate1 = new java.sql.Date(SDF.parse(startDate).getTime());
+            java.sql.Date endDate1 = new java.sql.Date(SDF.parse(endDate).getTime());
+
+            switch (sensortype.toLowerCase()) {
+                case "temperature":
+                    return Response.status(Response.Status.OK).entity(tempController.getMinAndMaxPerDay(startDate1, endDate1)).build();
+
+                case "co2":
+                    return Response.status(Response.Status.OK).entity(co2Controller.getMinAndMaxPerDay(startDate1, endDate1)).build();
+                case "humidity":
+                    return Response.status(Response.Status.OK).entity(humidityController.getMinAndMaxPerDay(startDate1, endDate1)).build();
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+
+            return Response.status(500).entity(e).build();
+        }
+
+        return null;
+    }
 
 
 

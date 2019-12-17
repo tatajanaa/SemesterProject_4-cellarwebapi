@@ -10,8 +10,13 @@ import java.util.List;
 public interface IdatabaseAdapter<T> {
 
 
-    public List<T> getAverage(Date startDate, Date endDate) throws SQLException;
-    public T getLastReading() throws SQLException;
-    public List<T> getAveragePerEachHour(Date date) throws SQLException;
+    public List<T> getAverage(Date startDate, Date endDate);
+
+    public T getLastReading();
+
+    public List<T> getAveragePerEachHour(Date date);
+
+    public List<T> getMinAndMaxPerDay(Date startDate, Date endDate);
+
 
 }

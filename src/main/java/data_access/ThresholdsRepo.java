@@ -1,14 +1,18 @@
 package data_access;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import model.Temperature;
+import model.Threshold;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ThresholdsRepo {
 
     private Connection connection;
-    PreparedStatement stmt =null;
+    Statement statement = null;
+    List<Threshold> thresholdList = null;
+    PreparedStatement stmt = null;
 
     public ThresholdsRepo(Connection connection) {
         this.connection = connection;
@@ -19,7 +23,7 @@ public class ThresholdsRepo {
         try {
             stmt = connection.prepareStatement(
                     " update dbo.Thresholds" +
-                            "  set minValue="+minValue+", maxValue="+maxValue +
+                            "  set minValue=" + minValue + ", maxValue=" + maxValue +
                             "  where SensorType='CO2';");
 
 
@@ -36,7 +40,7 @@ public class ThresholdsRepo {
         try {
             stmt = connection.prepareStatement(
                     " update dbo.Thresholds" +
-                            "  set minValue="+minValue+", maxValue="+maxValue +
+                            "  set minValue=" + minValue + ", maxValue=" + maxValue +
                             "  where SensorType='Humidity';");
 
             stmt.executeUpdate();
@@ -46,12 +50,13 @@ public class ThresholdsRepo {
             e.printStackTrace();
         }
     }
+
     public void setTemperatureThresholds(double minValue, double maxValue) {
 
         try {
             stmt = connection.prepareStatement(
                     " update dbo.Thresholds" +
-                            "  set minValue="+minValue+", maxValue="+maxValue +
+                            "  set minValue=" + minValue + ", maxValue=" + maxValue +
                             "  where SensorType='Temperature';");
 
             stmt.executeUpdate();
@@ -60,5 +65,30 @@ public class ThresholdsRepo {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Threshold> getThresholds() {
+        thresholdList = new ArrayList<>();
+
+        try {
+            statement = connection.createStatement();
+
+            ResultSet resultSet = statement.executeQuery("use SmartCellarWarehouse_SEP4A19G2 " +
+                    "  select * from sourceDB_SEP4A19G2.dbo.Thresholds;");
+
+            while (resultSet.next()) {
+                Threshold threshold = new Threshold();
+
+                threshold.setSensorType(resultSet.getString(1));
+                threshold.setMinValue(resultSet.getDouble(2));
+                threshold.setMaxValue(resultSet.getDouble(3));
+                thresholdList.add(threshold);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(thresholdList);
+        return thresholdList;
     }
 }

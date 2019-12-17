@@ -26,37 +26,32 @@ public class TempController {
     }
 
 
-    public List<Temperature> getAverageTemperature(Date startDate, Date endDate) throws ParseException {
+    public List<Temperature> getAverageTemperature(Date startDate, Date endDate) {
         IdatabaseAdapter adapter = new TemperatureRepo(DataWarehouseConnection.getConnection());
 
-        try {
-            return adapter.getAverage(startDate, endDate);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return  null;
+        return adapter.getAverage(startDate, endDate);
+
     }
 
-
-
-    public Temperature getLastTemperatureReading(){
+    public Temperature getLastTemperatureReading() {
         IdatabaseAdapter adapter1 = new TemperatureRepo(SourceDbConnection.getConnection());
-        try {
-            return (Temperature) adapter1.getLastReading();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+
+        return (Temperature) adapter1.getLastReading();
+
     }
 
-    public List<Temperature> getAverageTemperaturePerHour(Date date) throws ParseException {
+    public List<Temperature> getAverageTemperaturePerHour(Date date) {
         IdatabaseAdapter adapter = new TemperatureRepo(DataWarehouseConnection.getConnection());
 
-        try {
-            return adapter.getAveragePerEachHour(date);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return  null;
+        return adapter.getAveragePerEachHour(date);
+
+    }
+
+    public List<Temperature> getMinAndMaxPerDay(Date startDate, Date endDate){
+        IdatabaseAdapter adapter = new TemperatureRepo(DataWarehouseConnection.getConnection());
+
+      return adapter.getMinAndMaxPerDay(startDate, endDate);
+
+
     }
 }
