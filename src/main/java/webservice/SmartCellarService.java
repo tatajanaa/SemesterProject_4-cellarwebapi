@@ -97,7 +97,7 @@ public class SmartCellarService implements ISmartCellarService {
     @Override
     @GET
     @Path("/outofbounds")
-    public Response getOutOfBoundsLastReading() {
+    public Response getOutOfBoundsLastReading()  {
 
         return Response.status(Response.Status.OK).entity(thresholdController.getOutOfBoundsLastReading()).build();
 
