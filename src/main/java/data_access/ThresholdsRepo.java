@@ -90,6 +90,22 @@ public class ThresholdsRepo {
         }
         System.out.println(thresholdList);
         return thresholdList;
+
+
+    } public void updateOutOfBoundsTable(){
+
+        try {
+            stmt = connection.prepareStatement(
+                    " update sourceDB_SEP4A19G2.dbo.outOfBounds set notified='True';");
+
+            stmt.executeUpdate();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public List<Threshold> getOutOfBoundsLastReading() {
@@ -100,7 +116,7 @@ public class ThresholdsRepo {
 
             ResultSet resultSet = statement.executeQuery("use sourceDB_SEP4A19G2 " +
                     " select* from sourceDB_SEP4A19G2.dbo.outOfBounds where " +
-                    "  sensorLocation='cell1';");
+                    "  where notified=1 and sensorLocation='cell1';");
 
             while (resultSet.next()) {
                 Threshold threshold = new Threshold();
@@ -113,7 +129,9 @@ public class ThresholdsRepo {
             e.printStackTrace();
         }
         System.out.println(thresholdList);
+        updateOutOfBoundsTable();
         return thresholdList;
+
     }
 
 }
