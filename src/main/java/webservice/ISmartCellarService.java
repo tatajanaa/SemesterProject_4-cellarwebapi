@@ -12,11 +12,7 @@ public interface ISmartCellarService {
 
     public Response getLastReading(String sensorType);
 
-    public Response setCO2Thresholds(double minValue, double maxValue);
-
-    public Response setTemperatureThresholds(double minValue, double maxValue);
-
-    public Response setHumidityThresholds(double minValue, double maxValue);
+    public Response setThresholds(String sensorType, double minValue, double maxValue);
 
     public Response getThresholds();
 

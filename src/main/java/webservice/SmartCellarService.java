@@ -65,31 +65,27 @@ public class SmartCellarService implements ISmartCellarService {
 
     @Override
     @GET
-    @Path("/threshold/co2/{minValue}/{maxValue}")
-    public Response setCO2Thresholds(@PathParam("minValue") double minValue,
-                                     @PathParam("maxValue") double maxValue) {
+    @Path("/threshold/{sensorType}/{minValue}/{maxValue}")
+    public Response setThresholds(@PathParam("sensorType") String sensortype, @PathParam("minValue") double minValue,
+                                  @PathParam("maxValue") double maxValue) {
 
-        thresholdController.setCO2Thresholds(minValue, maxValue);
-        return Response.status(200).build();
+        switch (sensortype.toLowerCase()) {
+            case "temperature":
+                thresholdController.setTemperatureThresholds(minValue, maxValue);
+                return Response.status(200).build();
+
+            case "co2":
+                thresholdController.setCO2Thresholds(minValue, maxValue);
+                return Response.status(200).build();
+            case "humidity":
+                thresholdController.setHumidityThresholds(minValue, maxValue);
+                return Response.status(200).build();
+        }
+
+
+        return null;
     }
 
-    @Override
-    @GET
-    @Path("/threshold/temp/{minValue}/{maxValue}")
-    public Response setTemperatureThresholds(@PathParam("minValue") double minValue,
-                                             @PathParam("maxValue") double maxValue) {
-        thresholdController.setTemperatureThresholds(minValue, maxValue);
-        return Response.status(200).build();
-    }
-
-    @Override
-    @GET
-    @Path("/threshold/humid/{minValue}/{maxValue}")
-    public Response setHumidityThresholds(@PathParam("minValue") double minValue,
-                                          @PathParam("maxValue") double maxValue) {
-        thresholdController.setHumidityThresholds(minValue, maxValue);
-        return Response.status(200).build();
-    }
 
     @Override
     @GET
@@ -164,8 +160,8 @@ public class SmartCellarService implements ISmartCellarService {
     @GET
     @Path("/minMax/{sensortype}/{startDate}/{endDate}")
     public Response getMinAndMaxPerDay(@PathParam("sensortype") String sensortype,
-                               @PathParam("startDate") String startDate,
-                               @PathParam("endDate") String endDate) {
+                                       @PathParam("startDate") String startDate,
+                                       @PathParam("endDate") String endDate) {
 
         java.sql.Date startDate1 = null;
         try {
@@ -190,8 +186,6 @@ public class SmartCellarService implements ISmartCellarService {
 
         return null;
     }
-
-
 
 
 }
