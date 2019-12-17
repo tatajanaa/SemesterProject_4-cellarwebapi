@@ -4,6 +4,7 @@ import controllers.CO2Controller;
 import controllers.HumidityController;
 import controllers.TempController;
 import controllers.ThresholdController;
+import model.Threshold;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -14,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 @Path("/api")
 @Produces("application/json")
@@ -98,8 +100,10 @@ public class SmartCellarService implements ISmartCellarService {
     @GET
     @Path("/outofbounds")
     public Response getOutOfBoundsLastReading()  {
+        List<Threshold> t = thresholdController.getOutOfBoundsLastReading();
+        thresholdController.updateOutOfBoundsTable();
+        return Response.status(Response.Status.OK).entity(t).build();
 
-        return Response.status(Response.Status.OK).entity(thresholdController.getOutOfBoundsLastReading()).build();
 
 }
 
