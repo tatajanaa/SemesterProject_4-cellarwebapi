@@ -129,8 +129,8 @@ public class ThresholdsRepo {
             e.printStackTrace();
         }
         System.out.println(thresholdList);
-        updateOutOfBoundsTable();
-        return thresholdList;
+
+            return thresholdList;
 
     }
 

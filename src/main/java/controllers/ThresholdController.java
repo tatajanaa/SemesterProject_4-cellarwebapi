@@ -40,6 +40,9 @@ public class ThresholdController {
         return repo.getOutOfBoundsLastReading();
 
     }
+    public void updateOutOfBoundsTable(){
+        repo.updateOutOfBoundsTable();
+    }
 
 
 

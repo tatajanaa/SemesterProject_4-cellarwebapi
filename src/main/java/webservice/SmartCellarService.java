@@ -89,17 +89,22 @@ public class SmartCellarService implements ISmartCellarService {
 
     @Override
     @GET
-    @Path("/getThresholds")
+    @Path("/getthresholds")
     public Response getThresholds() {
         return Response.status(Response.Status.OK).entity(thresholdController.getThresholds()).build();
     }
 
     @Override
     @GET
-    @Path("/outOfBounds")
+    @Path("/outofbounds")
     public Response getOutOfBoundsLastReading() {
+
         return Response.status(Response.Status.OK).entity(thresholdController.getOutOfBoundsLastReading()).build();
-    }
+
+}
+
+
+    
 
 
     @Override
@@ -165,7 +170,7 @@ public class SmartCellarService implements ISmartCellarService {
 
 
     @GET
-    @Path("/minMax/{sensortype}/{startDate}/{endDate}")
+    @Path("/minmax/{sensortype}/{startDate}/{endDate}")
     public Response getMinAndMaxPerDay(@PathParam("sensortype") String sensortype,
                                        @PathParam("startDate") String startDate,
                                        @PathParam("endDate") String endDate) {
