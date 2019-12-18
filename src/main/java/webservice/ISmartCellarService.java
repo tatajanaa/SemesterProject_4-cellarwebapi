@@ -12,7 +12,6 @@ public interface ISmartCellarService {
 
     public Response getLastReading(String sensorType);
 
-    public Response setThresholds(String sensorType, double minValue, double maxValue);
 
     public Response getThresholds();
 
