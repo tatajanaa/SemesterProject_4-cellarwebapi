@@ -8,10 +8,7 @@ import model.Threshold;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,6 +16,7 @@ import java.util.List;
 
 @Path("/api")
 @Produces("application/json")
+@Consumes("application/json")
 public class SmartCellarService implements ISmartCellarService {
 
     private final SimpleDateFormat SDF;
@@ -37,7 +35,12 @@ public class SmartCellarService implements ISmartCellarService {
         thresholdController = new ThresholdController();
     }
 
-
+    /**
+     * Returns last reading from database
+     *
+     * @param sensortype retrieve from client
+     * @return one Temperature or CO2 or Humidity object(with attributes date, time, reading)
+     */
     @Override
     @GET
     @Path("/last/{sensortype}")
@@ -65,8 +68,16 @@ public class SmartCellarService implements ISmartCellarService {
         return Response.status(Response.Status.NOT_FOUND).entity(json.toString()).build();
     }
 
+    /**
+     * Method saves Temperature or Humidity or CO2 thresholds in database
+     *
+     * @param sensortype retrieve from client
+     * @param minValue   retrieve from client
+     * @param maxValue   retrieve from client
+     * @return status code 200 indicates that the request has been processed successfully
+     */
     @Override
-    @GET
+    @POST
     @Path("/threshold/{sensorType}/{minValue}/{maxValue}")
     public Response setThresholds(@PathParam("sensorType") String sensortype, @PathParam("minValue") double minValue,
                                   @PathParam("maxValue") double maxValue) {
@@ -74,21 +85,33 @@ public class SmartCellarService implements ISmartCellarService {
         switch (sensortype.toLowerCase()) {
             case "temperature":
                 thresholdController.setTemperatureThresholds(minValue, maxValue);
-                return Response.status(200).build();
+               // return Response.status(200).build();
 
             case "co2":
                 thresholdController.setCO2Thresholds(minValue, maxValue);
-                return Response.status(200).build();
+               // return Response.status(200).build();
             case "humidity":
                 thresholdController.setHumidityThresholds(minValue, maxValue);
-                return Response.status(200).build();
+               // return Response.status(200).build();
         }
 
 
         return null;
     }
 
+    @POST
+    @Path("/threshold/temp")
+    public Response setThresholds(Threshold threshold) {
 
+                thresholdController.setTemperatureThresholds(threshold.getMinValue(), threshold.getMaxValue());
+        return Response.status(200).build();
+    }
+
+    /**
+     * Methods returns all saved Threshold values for Temperature, CO2 and Humidity from database
+     *
+     * @return List of Threshold objects(attributes: sensortype, minValue, maxValue)
+     */
     @Override
     @GET
     @Path("/getthresholds")
@@ -96,21 +119,32 @@ public class SmartCellarService implements ISmartCellarService {
         return Response.status(Response.Status.OK).entity(thresholdController.getThresholds()).build();
     }
 
+    /**
+     * Method returns values from OutOfBounds table
+     * values are stored in Threshold object in date, time and minValue, where minValue stores
+     * measured value out of limits.
+     * method calls updateOutOfBoundsTable() which updates table in database and sets notified to True
+     *
+     * @return List of Threshold objects
+     */
     @Override
     @GET
     @Path("/outofbounds")
-    public Response getOutOfBoundsLastReading()  {
+    public Response getOutOfBoundsLastReading() {
         List<Threshold> t = thresholdController.getOutOfBoundsLastReading();
         thresholdController.updateOutOfBoundsTable();
         return Response.status(Response.Status.OK).entity(t).build();
 
 
-}
+    }
 
-
-    
-
-
+    /**
+     * Method returns average Temperature or CO2 or Humidity for each day in selected period
+     * @param sensortype retrieve form client
+     * @param startDate retrieve form client
+     * @param endDate retrieve form client
+     * @return List of Temperature or Humidity or CO2 object (attributes: date, time, average reading)
+     */
     @Override
     @GET
     @Path("/average/{sensortype}/{startDate}/{endDate}")
@@ -142,6 +176,13 @@ public class SmartCellarService implements ISmartCellarService {
         return null;
     }
 
+    /**
+     * Method returns hourly average readings of Temperature or co2 or Humidity fo ONE chosen day
+     *
+     * @param sensortype retrieve form client
+     * @param date retrieve form client
+     * @return list of Temperature or CO2 or Humidity objects with attributes hour:int and average reading per hour
+     */
     @Override
     @GET
     @Path("/avghour/{sensortype}/{date}")
@@ -172,7 +213,14 @@ public class SmartCellarService implements ISmartCellarService {
 
     }
 
-
+    /**
+     * Method returns minimums and maximums measured value per each day in selected period
+     * @param sensortype retrieves form client
+     * @param startDate  retrieves form client
+     * @param endDate retrieves form client
+     * @return List
+     */
+    @Override
     @GET
     @Path("/minmax/{sensortype}/{startDate}/{endDate}")
     public Response getMinAndMaxPerDay(@PathParam("sensortype") String sensortype,

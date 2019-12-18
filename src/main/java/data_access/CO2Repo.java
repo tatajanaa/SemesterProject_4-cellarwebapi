@@ -19,7 +19,12 @@ public class CO2Repo implements IdatabaseAdapter<Co2> {
         this.connection = connection;
     }
 
-
+    /**
+     * Returns a list  of average CO2 levels per day in period between two selected dates
+     * @param startDate
+     * @param endDate
+     * @return List
+     */
     @Override
     public List<Co2> getAverage(Date startDate, Date endDate) {
         co2List = new ArrayList<>();

@@ -18,5 +18,7 @@ public interface ISmartCellarService {
 
     public Response getOutOfBoundsLastReading();
 
+    public Response getMinAndMaxPerDay(String sensorType, String startDate, String endDate);
+
 
 }
