@@ -76,34 +76,27 @@ public class SmartCellarService implements ISmartCellarService {
      * @param maxValue   retrieve from client
      * @return status code 200 indicates that the request has been processed successfully
      */
-    @Override
-    @POST
-    @Path("/threshold/{sensorType}/{minValue}/{maxValue}")
-    public Response setThresholds(@PathParam("sensorType") String sensortype, @PathParam("minValue") double minValue,
-                                  @PathParam("maxValue") double maxValue) {
 
-        switch (sensortype.toLowerCase()) {
-            case "temperature":
-                thresholdController.setTemperatureThresholds(minValue, maxValue);
-               // return Response.status(200).build();
-
-            case "co2":
-                thresholdController.setCO2Thresholds(minValue, maxValue);
-               // return Response.status(200).build();
-            case "humidity":
-                thresholdController.setHumidityThresholds(minValue, maxValue);
-               // return Response.status(200).build();
-        }
-
-
-        return null;
-    }
 
     @POST
     @Path("/threshold/temp")
-    public Response setThresholds(Threshold threshold) {
+    public Response setThresholdsTemp(Threshold threshold) {
 
                 thresholdController.setTemperatureThresholds(threshold.getMinValue(), threshold.getMaxValue());
+        return Response.status(200).build();
+    }
+    @POST
+    @Path("/threshold/humid")
+    public Response setThresholdsHum(Threshold threshold) {
+
+        thresholdController.setHumidityThresholds(threshold.getMinValue(), threshold.getMaxValue());
+        return Response.status(200).build();
+    }
+    @POST
+    @Path("/threshold/co2")
+    public Response setThresholdsCO2(Threshold threshold) {
+
+        thresholdController.setCO2Thresholds(threshold.getMinValue(), threshold.getMaxValue());
         return Response.status(200).build();
     }
 
