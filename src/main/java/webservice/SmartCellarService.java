@@ -67,17 +67,7 @@ public class SmartCellarService implements ISmartCellarService {
         }
         return Response.status(Response.Status.NOT_FOUND).entity(json.toString()).build();
     }
-
-    /**
-     * Method saves Temperature or Humidity or CO2 thresholds in database
-     *
-     * @param sensortype retrieve from client
-     * @param minValue   retrieve from client
-     * @param maxValue   retrieve from client
-     * @return status code 200 indicates that the request has been processed successfully
-     */
-
-
+    @Override
     @POST
     @Path("/threshold/temp")
     public Response setThresholdsTemp(Threshold threshold) {
@@ -85,6 +75,7 @@ public class SmartCellarService implements ISmartCellarService {
                 thresholdController.setTemperatureThresholds(threshold.getMinValue(), threshold.getMaxValue());
         return Response.status(200).build();
     }
+    @Override
     @POST
     @Path("/threshold/humid")
     public Response setThresholdsHum(Threshold threshold) {
@@ -92,6 +83,7 @@ public class SmartCellarService implements ISmartCellarService {
         thresholdController.setHumidityThresholds(threshold.getMinValue(), threshold.getMaxValue());
         return Response.status(200).build();
     }
+    @Override
     @POST
     @Path("/threshold/co2")
     public Response setThresholdsCO2(Threshold threshold) {
