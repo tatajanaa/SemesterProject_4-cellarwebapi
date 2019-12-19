@@ -90,7 +90,7 @@ public class CO2Repo implements IdatabaseAdapter<Co2> {
                     " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_CO2.Date_ID" +
                     " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_CO2.Time_ID" +
                     " Where MeasuringDate<='" + date + "' " +
-                    " group by Hour, mesurement order by  Hour, Average; ");
+                    " group by Hour; ");
 
             while (resultSet.next()) {
                 Co2 co2 = new Co2();
