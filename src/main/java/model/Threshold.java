@@ -10,6 +10,13 @@ public class Threshold {
 
     }
 
+    public Threshold(String sensorType, double minValue, double maxValue)
+    {
+        this.sensorType = sensorType;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+    }
+
     public void setSensorType(String sensorType) {
         this.sensorType = sensorType;
     }
