@@ -1,7 +1,6 @@
 package data_access;
 
 import model.Humidity;
-import model.Temperature;
 
 import java.sql.*;
 import java.util.ArrayList;

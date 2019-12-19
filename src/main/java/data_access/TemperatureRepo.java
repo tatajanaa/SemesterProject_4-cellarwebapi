@@ -1,14 +1,9 @@
 package data_access;
 
-import model.Co2;
 import model.Temperature;
-import model.Threshold;
 
 import java.sql.*;
-import java.text.ParseException;
 import java.util.ArrayList;
-
-
 import java.util.List;
 
 public class TemperatureRepo implements IdatabaseAdapter<Temperature> {
@@ -73,7 +68,6 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return temp;
     }
 

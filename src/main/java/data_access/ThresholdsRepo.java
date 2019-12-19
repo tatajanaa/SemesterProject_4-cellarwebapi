@@ -1,13 +1,12 @@
 package data_access;
 
-import model.Temperature;
 import model.Threshold;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThresholdsRepo {
+public class ThresholdsRepo implements IThresholdAdapter {
 
     private Connection connection;
     Statement statement = null;
@@ -18,6 +17,7 @@ public class ThresholdsRepo {
         this.connection = connection;
     }
 
+    @Override
     public void setCO2Thresholds(double minValue, double maxValue) {
 
         try {
@@ -35,6 +35,7 @@ public class ThresholdsRepo {
         }
     }
 
+    @Override
     public void setHumidityThresholds(double minValue, double maxValue) {
 
         try {
@@ -51,6 +52,7 @@ public class ThresholdsRepo {
         }
     }
 
+    @Override
     public void setTemperatureThresholds(double minValue, double maxValue) {
 
         try {
@@ -67,6 +69,7 @@ public class ThresholdsRepo {
         }
     }
 
+    @Override
     public List<Threshold> getThresholds() {
         thresholdList = new ArrayList<>();
 
@@ -92,7 +95,10 @@ public class ThresholdsRepo {
         return thresholdList;
 
 
-    } public void updateOutOfBoundsTable(){
+    }
+
+    @Override
+    public void updateOutOfBoundsTable() {
 
         try {
             stmt = connection.prepareStatement(
@@ -108,6 +114,7 @@ public class ThresholdsRepo {
 
     }
 
+    @Override
     public List<Threshold> getOutOfBoundsLastReading() {
 
         thresholdList = new ArrayList<>();
@@ -116,7 +123,7 @@ public class ThresholdsRepo {
 
             ResultSet resultSet = statement.executeQuery("use sourceDB_SEP4A19G2 " +
                     " select* from sourceDB_SEP4A19G2.dbo.outOfBounds where " +
-                    "  notified=0 and sensorLocation='cell1';");
+                    "  notified=0;");
 
             while (resultSet.next()) {
                 Threshold threshold = new Threshold();
@@ -130,7 +137,7 @@ public class ThresholdsRepo {
         }
         System.out.println(thresholdList);
 
-            return thresholdList;
+        return thresholdList;
 
     }
 

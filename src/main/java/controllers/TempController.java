@@ -1,21 +1,12 @@
 package controllers;
 
-import data_access.HumidityRepo;
-import data_access.JDBC_connection.DataWarehouseConnection;
 import data_access.IdatabaseAdapter;
+import data_access.JDBC_connection.DataWarehouseConnection;
 import data_access.JDBC_connection.SourceDbConnection;
 import data_access.TemperatureRepo;
-import model.Humidity;
 import model.Temperature;
-import org.codehaus.jackson.annotate.JsonIgnoreType;
 
-import javax.crypto.spec.PSource;
 import java.sql.Date;
-import java.sql.SQLException;
-import java.text.ParseException;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TempController {
@@ -47,10 +38,10 @@ public class TempController {
 
     }
 
-    public List<Temperature> getMinAndMaxPerDay(Date startDate, Date endDate){
+    public List<Temperature> getMinAndMaxPerDay(Date startDate, Date endDate) {
         IdatabaseAdapter adapter = new TemperatureRepo(DataWarehouseConnection.getConnection());
 
-      return adapter.getMinAndMaxPerDay(startDate, endDate);
+        return adapter.getMinAndMaxPerDay(startDate, endDate);
 
 
     }

@@ -1,10 +1,8 @@
 package data_access;
 
 import model.Co2;
-import model.Humidity;
 
 import java.sql.*;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 

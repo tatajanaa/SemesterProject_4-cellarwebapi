@@ -47,7 +47,6 @@ public class SmartCellarService implements ISmartCellarService {
     public Response getLastReading(@PathParam("sensortype") String sensortype) {
         TempController controller = new TempController();
         JSONObject json = new JSONObject();
-
         try {
             json.put("sensortype ", sensortype + " not found");
 
@@ -61,7 +60,6 @@ public class SmartCellarService implements ISmartCellarService {
                 case "humidity":
                     return Response.status(Response.Status.OK).entity(humidityController.getLastHumidityReading()).build();
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
