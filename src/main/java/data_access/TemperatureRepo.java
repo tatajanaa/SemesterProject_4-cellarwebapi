@@ -85,7 +85,7 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature> {
                     " JOIN Dim_Date ON Dim_Date.Date_ID = Fact_Temperature.Date_ID" +
                     " JOIN Dim_Time ON Dim_Time.Time_ID = Fact_Temperature.Time_ID" +
                     " Where MeasuringDate<='" + date + "' " +
-                    " group by Hour, mesurement order by  Hour, Average; ");
+                    " group by Hour; ");
 
             while (resultSet.next()) {
                 Temperature temperature = new Temperature();
@@ -97,7 +97,7 @@ public class TemperatureRepo implements IdatabaseAdapter<Temperature> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        System.out.println(temperatureList);
         return temperatureList;
     }
 
